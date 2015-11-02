@@ -4,96 +4,94 @@ module.exports = {
   fp : FilePointer
 };
 
-const IFF_ENTRIES = {
-  "AFS":".afs"
-  "XVMH":".xvm",
-  "XVRT":".xvr",
-  "PVMH":".xvm",
-  "PVRT":".xvr",
-  "NMDM":".njm",
-  "NJTL":".nj",
-  "NJCM":".nj"
-}
-
 function FilePointer(filename){
-  var fp = 0;
-  var buffer = fs.readFileSync(filename);
+  this.fp = 0;
+  this.buffer = fs.readFileSync(filename);
 
   this.seek = function(offset, pos){
     if(pos === 0){
       pos = 0;
     }else if(pos === 2){
-      pos = buffer.length;
+      pos = this.buffer.length;
     };
 
-    fp = pos;
-    fp += offset;
+    this.fp = pos;
+    this.fp += offset;
+  }
+
+  this.advance = function(offset){
+    this.fp += offset;
   }
 
   this.trim = function(){
-    buffer = buffer.slice(fp);
-    fp = 0;
+    this.buffer = this.buffer.slice(this.fp);
+    this.fp = 0;
   }
 
-  this.copy = function(start, end){
-    var tmp = new Buffer(end - start);
-    buffer.copy(tmp, 0, start, end);
+  this.slice = function(start, end){
+    var tmp = new this.buffer(end - start);
+    this.buffer.copy(tmp, 0, start, end);
     return tmp;
   }
 
   this.readWord = function(){
-    var integer = buffer.readUInt16LE(fp);
-    fp += 2;
+    var integer = this.buffer.readUInt16LE(this.fp);
+    this.fp += 2;
     return integer;
   }
 
   this.readDword = function(){
-    var integer = buffer.readUInt32LE(fp);
-    fp += 4;
+    var integer = this.buffer.readUInt32LE(this.fp);
+    this.fp += 4;
     return integer;
   }
 
   this.readSingle = function(){
-    var double = buffer.readFloatLE(fp);
-    fp += 4;
+    var double = this.buffer.readFloatLE(this.fp);
+    this.fp += 4;
     double = double.toFixed(6);
     double = parseFloat(double);
     return double;
   }
 
   this.readHex = function(len){
-    var str = buffer.toString("hex", fp, fp + len);
-    fp += len;
+    var str = this.buffer.toString("hex", this.fp, this.fp + len);
+    this.fp += len;
     return str;
   }
 
-  this.readString = function(len){
-    var str = buffer.toString("ascii", fp, fp + len);
-    fp += len;
+  this.readStr = function(len){
+    var str = this.buffer.toString("ascii", this.fp, this.fp + len);
+    this.fp += len;
     str = str.replace(/\0/g, "");
     return str;
   }
 
-  this.readIFF = function(){
-    var str = buffer.toString("ascii", fp, fp + 4);
-    fp += 4;
+  this.readIff = function(){
+    var str = this.buffer.toString("ascii", this.fp, this.fp + 4);
     str = str.replace(/\0/g, "");
+    this.fp += 4;
     return str;
   }
 
-  this.getPosition = function(){
-    return fp;
+  this.ftell = function(){
+    return this.fp;
   }
 
-  this.findStr = function(match, pos){
-    var pos = pos || 0;
+  this.search = function(match, from){
+    var pos;
+    if(from == 0){
+     pos = 0;
+   }else if(from == 1){
+     pos = this.fp;
+   }
 
-    for(pos; pos < buffer.length - 4; pos += 4){
-      var str = buffer.toString("ascii", pos, pos + 4);
+    for(pos; pos < this.buffer.length - 4; pos += 4){
+      var str = this.buffer.toString("ascii", pos, pos + 4);
       str = str.replace(/\0/g, "");
 
       if(str == match){
-        fp = pos;
+        this.fp = pos;
         return true;
       }
     }
@@ -102,24 +100,11 @@ function FilePointer(filename){
   }
 
   this.readAngle = function(){
-    var angle = buffer.readInt32LE(fp);
-    fp += 4;
+    var angle = this.buffer.readInt32LE(this.fp);
+    this.fp += 4;
     var angle = angle / 0xFFFF;
     angle = parseInt(360 * angle);
     return angle;
-  }
-
-  this.getExtension = function (){
-    var iff;
-    iff = buffer.toString("ascii", 0, 4);
-    iff = iff.replace(/\0/g, "");
-
-    var ext = IFF_ENTRIES[iff];
-    if(!ext){
-      ext = ".bin";
-    }
-
-    return ext;
   }
 
 }
