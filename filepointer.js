@@ -1,10 +1,6 @@
 var fs = require("fs");
 
-module.exports = {
-  fp : FilePointer
-};
-
-function FilePointer(filename){
+module.exports = function(filename){
   this.fp = 0;
   this.buffer = fs.readFileSync(filename);
 
