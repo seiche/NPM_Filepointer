@@ -4,6 +4,10 @@ module.exports = function(filename){
   this.fp = 0;
   this.buffer = fs.readFileSync(filename);
 
+  this.SEEK_SET = 0;
+  this.SEEK_CUR = 1;
+  this.SEEK_END = 2;
+
   this.seek = function(offset, pos){
     if(pos === 0){
       pos = 0;
@@ -74,11 +78,11 @@ module.exports = function(filename){
     return this.fp;
   }
 
-  this.search = function(match, from){
+  this.search = function(match, whence){
     var pos;
-    if(from == 0){
+    if(!whence || whence == 0){
      pos = 0;
-   }else if(from == 1){
+   }else if(whence == 1){
      pos = this.fp;
    }
 

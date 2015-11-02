@@ -1,6 +1,6 @@
 {
   "name": "filepointer",
-  "version": "0.0.4",
+  "version": "0.0.2015.11.03.01",
   "description": "Small wrapper library for reading binary files with nodejs",
   "main": "filepointer.js",
   "scripts": {
