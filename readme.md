@@ -26,35 +26,35 @@ The FilePointer function can be imported by requiring it. Instances of FilePoint
 fp.seek_set(offset) 
 ```
 
-Lorem Ipsum
+Seeks to an offset from the start of the file.
 
 **fp.seek_cur**
 ```
 fp.seek_cur(offset) 
 ```
 
-Lorem Ipsum
+Seeks to an offset from the current file pointer position.
 
 **fp.seek_end**
 ```
 fp.seek_end(offset) 
 ```
 
-Lorem Ipsum
+Seeks to an offset from the end of end of the file.
 
 **fp.trim**
 ```
 fp.trim() 
 ```
 
-Lorem Ipsum
+Trims the internal buffer to the location of the current file pointer, and sets the value of the current pointer to zero. Useful when offsets inside a file do not account for the position in which the offset is declared.
 
 **fp.slice**
 ```
-fp.slice() 
+fp.slice(start, end) 
 ```
 
-Lorem Ipsum
+Copies and returns a raw buffer object from the provided start and end values in the argument. Does not advance the internal file pointer, and does not change the internal buffer.
 
 **fp.read_word**
 ```
