@@ -4,22 +4,17 @@ module.exports = function(filename){
   this.fp = 0;
   this.buffer = fs.readFileSync(filename);
 
-  this.SEEK_SET = 0;
-  this.SEEK_CUR = 1;
-  this.SEEK_END = 2;
-
-  this.seek = function(offset, pos){
-    if(pos === 0){
-      pos = 0;
-    }else if(pos === 2){
-      pos = this.buffer.length;
-    };
-
-    this.fp = pos;
+  this.seek_set = function(offset){
+    this.fp = 0;
     this.fp += offset;
   }
-
-  this.advance = function(offset){
+  
+  this.seek_cur = function(offset){
+    this.fp += offset;
+  }
+  
+  this.seek_end = function(offset){
+    this.fp = this.buffer.length;
     this.fp += offset;
   }
 
@@ -74,15 +69,15 @@ module.exports = function(filename){
     return str;
   }
 
-  this.ftell = function(){
+  this.get_position = function(){
     return this.fp;
   }
 
-  this.search = function(match, whence){
+  this.search = function(match, from_start){
     var pos;
-    if(!whence || whence == 0){
+    if(from_start){
      pos = 0;
-   }else if(whence == 1){
+   }else{
      pos = this.fp;
    }
 
