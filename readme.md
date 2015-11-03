@@ -21,12 +21,101 @@ var fp = new FilePointer("some_file.bin");
 The FilePointer function can be imported by requiring it. Instances of FilePointer can be initiated by calling the new keyword and passing a filename as an argument. FilePointer simply calls fs.readFileSync internally, so an error will be thrown if the file doesn't exist.
 
 
-**Constants**
+**fp.seek_set**
 ```
-fp.SEEK_SET // 0
-fp.SEEK_CUR // 1
-fp.SEEK_END // 2
+fp.seek_set(offset) 
 ```
 
-FilePointer uses constants similar to C language's FILE pointer interface. SEEK_SET is used when seeking from the start of the file, SEEK_CUR is used when seeking from the current position and SEEK_END is used when seeking from the end of the file.
+Lorem Ipsum
+
+**fp.seek_cur**
+```
+fp.seek_cur(offset) 
+```
+
+Lorem Ipsum
+
+**fp.seek_end**
+```
+fp.seek_end(offset) 
+```
+
+Lorem Ipsum
+
+**fp.trim**
+```
+fp.trim() 
+```
+
+Lorem Ipsum
+
+**fp.slice**
+```
+fp.slice() 
+```
+
+Lorem Ipsum
+
+**fp.read_word**
+```
+fp.read_word(offset) 
+```
+
+Lorem Ipsum
+
+**fp.read_dword**
+```
+fp.read_dword(offset) 
+```
+
+Lorem Ipsum
+
+**fp.read_single**
+```
+fp.read_single(offset) 
+```
+
+Lorem Ipsum
+
+**fp.read_hex**
+```
+fp.read_hex(offset) 
+```
+
+Lorem Ipsum
+
+**fp.read_str**
+```
+fp.read_str(offset) 
+```
+
+Lorem Ipsum
+
+**fp.read_iff**
+```
+fp.read_iff(offset) 
+```
+
+Lorem Ipsum
+
+**fp.get_pos**
+```
+fp.get_pos(offset) 
+```
+
+Lorem Ipsum
+
+**fp.find**
+```
+fp.find(offset) 
+```
+
+Lorem Ipsum
+
+**fp.read_angle**
+```
+fp.read_hex(offset) 
+```
+
+Lorem Ipsum
 
