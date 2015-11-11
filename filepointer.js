@@ -29,19 +29,19 @@ module.exports = function(filename){
     return tmp;
   }
 
-  this.readWord = function(){
+  this.read_word = function(){
     var integer = this.buffer.readUInt16LE(this.fp);
     this.fp += 2;
     return integer;
   }
 
-  this.readDword = function(){
+  this.read_dword = function(){
     var integer = this.buffer.readUInt32LE(this.fp);
     this.fp += 4;
     return integer;
   }
 
-  this.readSingle = function(){
+  this.read_single = function(){
     var double = this.buffer.readFloatLE(this.fp);
     this.fp += 4;
     double = double.toFixed(6);
@@ -49,31 +49,31 @@ module.exports = function(filename){
     return double;
   }
 
-  this.readHex = function(len){
+  this.read_hex = function(len){
     var str = this.buffer.toString("hex", this.fp, this.fp + len);
     this.fp += len;
     return str;
   }
 
-  this.readStr = function(len){
+  this.read_str = function(len){
     var str = this.buffer.toString("ascii", this.fp, this.fp + len);
     this.fp += len;
     str = str.replace(/\0/g, "");
     return str;
   }
 
-  this.readIff = function(){
+  this.read_iff = function(){
     var str = this.buffer.toString("ascii", this.fp, this.fp + 4);
     str = str.replace(/\0/g, "");
     this.fp += 4;
     return str;
   }
 
-  this.get_position = function(){
+  this.get_pos = function(){
     return this.fp;
   }
 
-  this.search = function(match, from_start){
+  this.find = function(match, from_start){
     var pos;
     if(from_start){
      pos = 0;
@@ -94,7 +94,7 @@ module.exports = function(filename){
     return false;
   }
 
-  this.readAngle = function(){
+  this.read_angle = function(){
     var angle = this.buffer.readInt32LE(this.fp);
     this.fp += 4;
     var angle = angle / 0xFFFF;
