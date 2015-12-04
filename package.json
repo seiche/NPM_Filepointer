@@ -1,6 +1,6 @@
 {
   "name": "filepointer",
-  "version": "0.0.12",
+  "version": "0.0.4",
   "description": "Small wrapper library for reading binary files with nodejs",
   "main": "filepointer.js",
   "scripts": {
@@ -14,7 +14,7 @@
     "filepointer"
   ],
   "author": "Benjamin Collins <seichestream@gmail.com>",
-  "license": "MIT",
+  "license": "GPLv2",
   "bugs": {
     "url": "https://github.com/seiche/Filepointer/issues"
   },
