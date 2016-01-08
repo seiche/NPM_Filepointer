@@ -27,6 +27,10 @@ class FilePointer {
 			this.buffer = fs.readFileSync(file);
 		}
 	}
+
+	read_dword(){
+		return 4;
+	}
 }
 
 module.exports = function(file){
