@@ -21,6 +21,11 @@ var fs = require("fs");
 class FilePointer {
 	constructor(file){
 		this.fp = 0;
+		if(Buffer.isBuffer(file){
+			this.buffer = file;
+		}else{
+			this.buffer = fs.readFileSync(file);
+		}
 	}
 }
 
