@@ -18,6 +18,12 @@
 
 var fs = require("fs");
 
+class FilePointer {
+	constructor(file){
+		this.fp = 0;
+	}
+}
+
 module.exports = function(file){
   this.fp = 0;
   if(Buffer.isBuffer(file)){
