@@ -16,10 +16,12 @@
   along with this utility.  If not, see <http://www.gnu.org/licenses/>.
 --------------------------------------------------------------------------*/
 
+"use strict";
 var fs = require("fs");
 
 class FilePointer {
-	constructor(file){
+
+	constructor(file, is_big_endian){
 		this.fp = 0;
 
 		if(Buffer.isBuffer(file){
@@ -28,10 +30,9 @@ class FilePointer {
 			this.buffer = fs.readFileSync(file);
 		}
 
-		this.is_little = true;
+		this.is_little = !is_big_endian;
 	}
 	
-
 	/**
 	 * Endian Functions
 	 **/
@@ -59,6 +60,41 @@ class FilePointer {
 	seek_end(pos){
 		this.fp = this.buffer.length + pos;
 	}
+
+	/**
+	 * Buffer functions
+	 **/
+
+	trim(){
+		this.buffer = this.buffer.slice(this.fp);
+		this.fp = 0;
+	}
+
+	copy(start, end){
+		var len, tmp;
+
+		if(arguments.length === 1){
+			len = start;
+			start = this.fp;
+			end = start + len;
+		}else{
+			len = end - start;
+		}
+
+		tmp = new Buffer(len);
+		this.buffer.copy(tmp,0, start, end);
+		return tmp;
+	}
+
+	/**
+	 * Read Functions
+	 **/
+
+	 read_byte(){
+
+	 }
+
+
 }
 
 module.exports = function(file){
