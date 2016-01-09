@@ -19,12 +19,13 @@
 "use strict";
 var fs = require("fs");
 
+
 class FilePointer {
 
 	constructor(file, is_big_endian){
 		this.fp = 0;
 
-		if(Buffer.isBuffer(file){
+		if(Buffer.isBuffer(file)){
 			this.buffer = file;
 		}else{
 			this.buffer = fs.readFileSync(file);
@@ -33,18 +34,6 @@ class FilePointer {
 		this.is_little = !is_big_endian;
 	}
 	
-	/**
-	 * Endian Functions
-	 **/
-
-	set_big(){
-		this.is_little = false;
-	}
-	
-	set_little(){
-		this.is_little = true;
-	}
-
 	/**
 	 * Seek Functions
 	 **/
@@ -169,6 +158,63 @@ class FilePointer {
 		this.fp += 4;
 		return float;
 	 }
+
+	/**
+	* String Functions
+	**/
+
+	read_str(len){
+		var str, null_index;
+
+		str = this.buffer.toString("ascii", this.fp, this.fp + len);
+		this.fp += len;
+		
+		null_index = str.indexOf("\0");
+		if(null_index !== -1){
+			str = str.substr(0, null_index);
+		}
+
+		return str;
+	}
+
+	read_hex(len){
+		var str;
+
+		str = this.buffer.toString("hex", this.fp, this.fp + len);
+		this.fp += len;
+		
+		return str;
+	}
+
+	read_iff(){
+		var str, null_index;
+
+		str = this.buffer.toString("ascii", this.fp, this.fp + 4);
+		this.fp += 4;
+		
+		null_index = str.indexOf("\0");
+		if(null_index !== -1){
+			str = str.substr(0, null_index);
+		}
+
+		return str;
+	}
+
+	find(match){
+		var str, search_len;
+		
+		search_len= this.buffer.length - match.length;
+
+		for(var pos = this.fp; pos < search_len; pos++){
+			str = this.buffer.toString("ascii", pos, pos + match.length);
+			if(str.localeCompare(match) === 0){
+				this.fp = pos;
+				return true;
+			}
+		}
+
+		return false;
+	}
 
 }
 
