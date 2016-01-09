@@ -86,14 +86,89 @@ class FilePointer {
 		return tmp;
 	}
 
+	get_pos(){
+		return this.fp;
+	}
+
+	get_len(){
+		return this.buffer.length;
+	}
+
 	/**
 	 * Read Functions
 	 **/
 
 	 read_byte(){
-
+	 	var integer;
+		integer = this.buffer.readUInt8(this.fp);
+		this.fp += 1;
+		return integer;
 	 }
 
+	 read_word(){
+		var integer;
+
+		if(this.is_little){
+			integer = this.buffer.readUInt16LE(this.fp);
+		}else{
+			integer = this.buffer.readUInt16BE(this.fp);
+		}
+
+		this.fp += 2;
+		return integer;
+	 }
+
+	 read_short(){
+		var integer;
+
+		if(this.is_little){
+			integer = this.buffer.readInt16LE(this.fp);
+		}else{
+			integer = this.buffer.readInt16BE(this.fp);
+		}
+
+		this.fp += 2;
+		return integer;
+	 }
+	
+	 read_dword(){
+		var integer;
+
+		if(this.is_little){
+			integer = this.buffer.readUInt32LE(this.fp);
+		}else{
+			integer = this.buffer.readUInt32BE(this.fp);
+		}
+
+		this.fp += 4;
+		return integer;
+	 }
+
+	 read_int(){
+		var integer;
+
+		if(this.is_little){
+			integer = this.buffer.readInt32LE(this.fp);
+		}else{
+			integer = this.buffer.readInt32BE(this.fp);
+		}
+
+		this.fp += 4;
+		return integer;
+	 }
+
+	 read_single(){
+		var float;
+
+		if(this.is_little){
+			float = this.buffer.readFloatLE(this.fp);
+		}else{
+			float = this.buffer.readFloatBE(this.fp);
+		}
+
+		this.fp += 4;
+		return float;
+	 }
 
 }
 
