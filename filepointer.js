@@ -21,15 +21,43 @@ var fs = require("fs");
 class FilePointer {
 	constructor(file){
 		this.fp = 0;
+
 		if(Buffer.isBuffer(file){
 			this.buffer = file;
 		}else{
 			this.buffer = fs.readFileSync(file);
 		}
+
+		this.is_little = true;
+	}
+	
+
+	/**
+	 * Endian Functions
+	 **/
+
+	set_big(){
+		this.is_little = false;
+	}
+	
+	set_little(){
+		this.is_little = true;
 	}
 
-	read_dword(){
-		return 4;
+	/**
+	 * Seek Functions
+	 **/
+
+	seek_set(pos){
+		this.fp = pos;
+	}
+
+	seek_cur(pos){
+		this.fp += pos;
+	}
+
+	seek_end(pos){
+		this.fp = this.buffer.length + pos;
 	}
 }
 
