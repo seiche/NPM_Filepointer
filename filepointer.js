@@ -1,6 +1,8 @@
+"use strict";
+
 /*--------------------------------------------------------------------------
   FilePointer a small wrapper class for reading binary files
-  Copyright (C) 2015  Benjamin Collins
+  Copyright (C) 2015,2016  Benjamin Collins
 
   This utility is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -16,10 +18,7 @@
   along with this utility.  If not, see <http://www.gnu.org/licenses/>.
 --------------------------------------------------------------------------*/
 
-"use strict";
 var fs = require("fs");
-
-//testing github push
 
 module.exports = class  {
 
@@ -32,7 +31,7 @@ module.exports = class  {
 			this.buffer = fs.readFileSync(file);
 		}
 
-		this.is_little = !is_big_endian;
+		this.is_big_endian = Boolean(is_big_endian);
 	}
 	
 	/**
@@ -40,14 +39,26 @@ module.exports = class  {
 	 **/
 
 	seek_set(pos){
+		if(pos === parseInt(pos, 10)){
+			throw new Error("Must provide an integer value to seek_set");
+		}
+
 		this.fp = pos;
 	}
 
 	seek_cur(pos){
+		if(pos === parseInt(pos, 10)){
+			throw new Error("Must provide an integer value to seek_cur");
+		}
+
 		this.fp += pos;
 	}
 
 	seek_end(pos){
+		if(pos === parseInt(pos, 10)){
+			throw new Error("Must provide an integer value to seek_end");
+		}
+
 		this.fp = this.buffer.length + pos;
 	}
 
@@ -60,24 +71,51 @@ module.exports = class  {
 		this.fp = 0;
 	}
 
-	copy(start, end){
+	copy(len, seek){
+		var tmp = new Buffer(len);
+
+		this.buffer.copy(tmp,0, this.fp, this.fp + len);
+		if(seek){
+			this.fp += len;
+		}
+
+		return tmp;
+	}
+
+	copy_abs(start, end){
 		var len, tmp;
 
-		if(arguments.length === 1){
-			len = start;
-			start = this.fp;
-			end = start + len;
-		}else{
-			len = end - start;
-		}
+		len = end - start;
 
 		tmp = new Buffer(len);
 		this.buffer.copy(tmp,0, start, end);
 		return tmp;
 	}
 
-	get_pos(){
-		return this.fp;
+	is_zero(){
+		if(this.fp >= this.buffer.length -4){
+			return false;
+		}
+
+		var integer;
+		integer = this.buffer.readUInt32LE(this.fp);
+		return Boolean(integer);
+	}
+
+	get_pos(debug){
+		if(!debug){
+			return this.fp;
+		}else{
+			return this.fp.toString(16);
+		}
+	}
+
+	tell(debug){
+		if(!debug){
+			return this.fp;
+		}else{
+			return this.fp.toString(16);
+		}
 	}
 
 	get_len(){
@@ -98,7 +136,20 @@ module.exports = class  {
 	 read_word(){
 		var integer;
 
-		if(this.is_little){
+		if(!this.is_big_endian){
+			integer = this.buffer.readUInt16LE(this.fp);
+		}else{
+			integer = this.buffer.readUInt16BE(this.fp);
+		}
+
+		this.fp += 2;
+		return integer;
+	 }
+
+	 read_ushort(){
+		var integer;
+
+		if(!this.is_big_endian){
 			integer = this.buffer.readUInt16LE(this.fp);
 		}else{
 			integer = this.buffer.readUInt16BE(this.fp);
@@ -111,7 +162,7 @@ module.exports = class  {
 	 read_short(){
 		var integer;
 
-		if(this.is_little){
+		if(!this.is_big_endian){
 			integer = this.buffer.readInt16LE(this.fp);
 		}else{
 			integer = this.buffer.readInt16BE(this.fp);
@@ -124,7 +175,33 @@ module.exports = class  {
 	 read_dword(){
 		var integer;
 
-		if(this.is_little){
+		if(!this.is_big_endian){
+			integer = this.buffer.readUInt32LE(this.fp);
+		}else{
+			integer = this.buffer.readUInt32BE(this.fp);
+		}
+
+		this.fp += 4;
+		return integer;
+	 }
+
+	 read_uint(){
+		var integer;
+
+		if(!this.is_big_endian){
+			integer = this.buffer.readUInt32LE(this.fp);
+		}else{
+			integer = this.buffer.readUInt32BE(this.fp);
+		}
+
+		this.fp += 4;
+		return integer;
+	 }
+
+	 read_angle(degrees){
+		var integer;
+
+		if(!this.is_big_endian){
 			integer = this.buffer.readUInt32LE(this.fp);
 		}else{
 			integer = this.buffer.readUInt32BE(this.fp);
@@ -137,7 +214,7 @@ module.exports = class  {
 	 read_int(){
 		var integer;
 
-		if(this.is_little){
+		if(!this.is_big_endian){
 			integer = this.buffer.readInt32LE(this.fp);
 		}else{
 			integer = this.buffer.readInt32BE(this.fp);
@@ -150,7 +227,7 @@ module.exports = class  {
 	 read_single(){
 		var float;
 
-		if(this.is_little){
+		if(!this.is_big_endian){
 			float = this.buffer.readFloatLE(this.fp);
 		}else{
 			float = this.buffer.readFloatBE(this.fp);
@@ -175,15 +252,6 @@ module.exports = class  {
 			str = str.substr(0, null_index);
 		}
 
-		return str;
-	}
-
-	read_hex(len){
-		var str;
-
-		str = this.buffer.toString("hex", this.fp, this.fp + len);
-		this.fp += len;
-		
 		return str;
 	}
 
