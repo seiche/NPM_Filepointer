@@ -76,7 +76,7 @@ fp.trim()
 
 Trims the internal buffer to the location of the current file pointer, and 
 then sets the value of the current pointer to zero. Useful when offsets inside 
-a file do not account for the position in which the offset is declared.
+a file are declared as relative to the current position and not absolute.
 
 **fp.copy**
 ```
@@ -123,7 +123,9 @@ a base 10 integer for use in the program. If the debug boolean is set, the
 function returns the position as a base 16 string.
 
 **fp.get_len()**
-
+```
+fp.get_len()
+```
 Returns the length of the current internal buffer.
 
 ###Read Functions
@@ -156,7 +158,7 @@ internal file pointer advances by two bytes.
 **fp.read_dword**
 ```
 fp.read_dword()
-fp.read_uint()
+fp.read_uint() //alias
 ```
 
 This function reads the next four bytes in the file as an unsigned integer. The

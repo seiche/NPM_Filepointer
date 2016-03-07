@@ -207,8 +207,16 @@ module.exports = class  {
 			integer = this.buffer.readUInt32BE(this.fp);
 		}
 
+		var c = 360 / 0xFFFF;
+		integer = (integer & 0xFFFF) * c;
+
 		this.fp += 4;
-		return integer;
+
+		if(degrees){
+			return integer;
+		}else{
+			return (integer * Math.PI) / 180;
+		}
 	 }
 
 	 read_int(){
