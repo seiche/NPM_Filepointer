@@ -39,7 +39,7 @@ module.exports = class  {
 	 **/
 
 	seek_set(pos){
-		if(pos === parseInt(pos, 10)){
+		if(pos !== parseInt(pos, 10)){
 			throw new Error("Must provide an integer value to seek_set");
 		}
 
@@ -47,7 +47,7 @@ module.exports = class  {
 	}
 
 	seek_cur(pos){
-		if(pos === parseInt(pos, 10)){
+		if(pos !== parseInt(pos, 10)){
 			throw new Error("Must provide an integer value to seek_cur");
 		}
 
@@ -55,7 +55,7 @@ module.exports = class  {
 	}
 
 	seek_end(pos){
-		if(pos === parseInt(pos, 10)){
+		if(pos !== parseInt(pos, 10)){
 			throw new Error("Must provide an integer value to seek_end");
 		}
 
