@@ -71,13 +71,11 @@ module.exports = class  {
 		this.fp = 0;
 	}
 
-	copy(len, seek){
+	copy(len){
 		var tmp = new Buffer(len);
 
 		this.buffer.copy(tmp,0, this.fp, this.fp + len);
-		if(seek){
-			this.fp += len;
-		}
+		this.fp += len;
 
 		return tmp;
 	}
@@ -110,12 +108,9 @@ module.exports = class  {
 		}
 	}
 
-	tell(debug){
-		if(!debug){
-			return this.fp;
-		}else{
-			return this.fp.toString(16);
-		}
+	tell(){
+		var pos = this.fp.toString(16);
+		console.log("Current position: %s", pos.toString(16));
 	}
 
 	get_len(){
