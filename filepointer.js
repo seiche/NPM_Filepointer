@@ -383,5 +383,24 @@ module.exports = class {
 
 		return false;
 	}
+	
+	read_color(isSpecular){
+		var a, r, g, b;
 
+		b = this.readByte() / 255;
+        g = this.readByte() / 255;
+        r = this.readByte() / 255;
+
+		if(!isSpecular){
+            a = this.readByte() / 255;
+		}else{
+            a = this.readByte() & 0x1F;
+		}
+
+        return [r, g, b, a];
+	}
+
+	readColor(isSpecular){
+		return this.read_color(isSpecular);
+	}
 }
